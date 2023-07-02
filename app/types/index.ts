@@ -11,3 +11,10 @@ export type ProfileUriData = {
     { trait_type: "instagram"; value: string }
   ];
 };
+
+export type Token = {
+  contract: string;
+  id: string;
+  name: string;
+  image: string;
+};

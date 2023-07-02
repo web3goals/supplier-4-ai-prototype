@@ -5,7 +5,7 @@ interface ChainConfig {
   chain: Chain;
   contractAddresses: {
     profile: string;
-    supply: string;
+    dataSupplier: string;
   };
 }
 
@@ -16,14 +16,15 @@ export function getSupportedChainConfigs(): ChainConfig[] {
   const chainConfigs: ChainConfig[] = [];
   if (
     process.env.NEXT_PUBLIC_POLYGON_MUMBAI_PROFILE_CONTRACT_ADDRESS &&
-    process.env.NEXT_PUBLIC_POLYGON_MUMBAI_SUPPLY_CONTRACT_ADDRESS
+    process.env.NEXT_PUBLIC_POLYGON_MUMBAI_DATA_SUPPLIER_CONTRACT_ADDRESS
   ) {
     chainConfigs.push({
       chain: polygonMumbai,
       contractAddresses: {
         profile:
           process.env.NEXT_PUBLIC_POLYGON_MUMBAI_PROFILE_CONTRACT_ADDRESS,
-        supply: process.env.NEXT_PUBLIC_POLYGON_MUMBAI_SUPPLY_CONTRACT_ADDRESS,
+        dataSupplier:
+          process.env.NEXT_PUBLIC_POLYGON_MUMBAI_DATA_SUPPLIER_CONTRACT_ADDRESS,
       },
     });
   }
@@ -86,10 +87,10 @@ export function chainToSupportedChainProfileContractAddress(
 /**
  * Return supply contract address of specified chain if it supported, otherwise return value from default supported chain.
  */
-export function chainToSupportedChainSupplyContractAddress(
+export function chainToSupportedChainDataSupplierContractAddress(
   chain: Chain | undefined
 ): `0x${string}` | undefined {
   return stringToAddress(
-    chainToSupportedChainConfig(chain).contractAddresses.supply
+    chainToSupportedChainConfig(chain).contractAddresses.dataSupplier
   );
 }

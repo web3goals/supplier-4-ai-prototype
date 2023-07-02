@@ -64,9 +64,9 @@ export const MediumLoadingButton = styled(LoadingButton)<LoadingButtonProps>(
     borderRadius: "24px",
     padding: "8px 18px",
     ...(variant === "outlined" && {
-      boxShadow: "inset 0px 0px 0px 4px",
+      boxShadow: "inset 0px 0px 0px 3px",
       "&:hover": {
-        boxShadow: "inset 0px 0px 0px 4px",
+        boxShadow: "inset 0px 0px 0px 3px",
       },
     }),
   })
