@@ -6,27 +6,35 @@ import SupplyRevokeDialog from "@/components/supply/SupplyRevokeDialog";
 import { DialogContext } from "@/context/dialog";
 import { dataSupplierContractAbi } from "@/contracts/abi/dataSupplierContract";
 import useError from "@/hooks/useError";
+import useKwil from "@/hooks/useKwil";
 import { Token } from "@/types";
 import {
   chainToSupportedChainDataSupplierContractAddress,
   chainToSupportedChainId,
 } from "@/utils/chains";
 import { ipfsUriToHttpUri } from "@/utils/converters";
-import { Box, Typography } from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
-import { useContractRead, useNetwork } from "wagmi";
+import { useAccount, useContractRead, useNetwork } from "wagmi";
 
 /**
  * Page with supplies.
  */
 export default function Supplies() {
-  // const { address } = useAccount(); // TODO: Use this address
-  const address = "0x3c8c98ad8062c611afd4d415b43bb98e4e7534bf";
+  const { address: accountAddress } = useAccount();
   const { handleError } = useError();
   const [tokenContracts, setTokenContracts] = useState<string[] | undefined>();
   const [tokens, setTokens] = useState<Token[] | undefined>();
+
+  /**
+   * Define fake address for testing
+   */
+  const address =
+    accountAddress === "0x4306D7a79265D2cb85Db0c5a55ea5F4f6F73C4B1"
+      ? "0x3c8c98ad8062c611afd4d415b43bb98e4e7534bf"
+      : accountAddress;
 
   /**
    * Load token contracts
@@ -117,17 +125,39 @@ export default function Supplies() {
 function TokenCard(props: { token: Token }) {
   const { showDialog, closeDialog } = useContext(DialogContext);
   const { chain } = useNetwork();
+  const { handleError } = useError();
+  const { selectSupply } = useKwil();
+  const [description, setDescription] = useState<string | undefined>();
 
   /**
    * Contract states
    */
-  const { data: isSupplied } = useContractRead({
+  const { data: isSupplied, refetch: refetchIsSupplied } = useContractRead({
     address: chainToSupportedChainDataSupplierContractAddress(chain),
     abi: dataSupplierContractAbi,
     functionName: "isSupplied",
     args: [props.token.contract as `0x${string}`, BigInt(props.token.id)],
     chainId: chainToSupportedChainId(chain),
   });
+
+  /**
+   * Define description
+   */
+  useEffect(() => {
+    setDescription("");
+    if (isSupplied) {
+      selectSupply(`${props.token.contract}_${props.token.id}`)
+        .then(({ data }: any) => setDescription(data?.[0]?.token_description))
+        .catch((error) => {
+          handleError(error, true);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSupplied]);
+
+  if (props.token.image.includes("mp4")) {
+    return <></>;
+  }
 
   return (
     <CardBox sx={{ display: "flex", flexDirection: "row" }}>
@@ -153,6 +183,16 @@ function TokenCard(props: { token: Token }) {
       {/* Right part */}
       <Box width={1} ml={3} display="flex" flexDirection="column">
         <Typography fontWeight={700}>{props.token.name}</Typography>
+        {description && (
+          <>
+            <Box mt={1}>
+              <Chip label="🖼️ Images" />
+            </Box>
+            <Typography variant="body2" mt={1}>
+              {description}
+            </Typography>
+          </>
+        )}
         <Box mt={2}>
           {isSupplied ? (
             <MediumLoadingButton
@@ -160,7 +200,8 @@ function TokenCard(props: { token: Token }) {
               onClick={() =>
                 showDialog?.(
                   <SupplyRevokeDialog
-                    onSuccess={() => {}}
+                    token={props.token}
+                    onSuccess={() => refetchIsSupplied()}
                     onClose={closeDialog}
                   />
                 )
@@ -174,7 +215,8 @@ function TokenCard(props: { token: Token }) {
               onClick={() =>
                 showDialog?.(
                   <SupplyMakeDialog
-                    onSuccess={() => {}}
+                    token={props.token}
+                    onSuccess={() => refetchIsSupplied()}
                     onClose={closeDialog}
                   />
                 )

@@ -6,6 +6,8 @@ import {
   DialogContentProps,
   Divider,
   DividerProps,
+  Select,
+  SelectProps,
   Skeleton,
   SkeletonProps,
   TextField,
@@ -140,6 +142,18 @@ export const WidgetInputTextField = styled(TextField)<TextFieldProps>(
     },
   })
 );
+
+export const WidgetInputSelect = styled(Select)<SelectProps>(({ theme }) => ({
+  width: "120px",
+  backgroundColor: "#FFFFFF",
+  borderRadius: "12px",
+  "&:hover .MuiOutlinedInput-notchedOutline": {
+    border: "4px solid #000000",
+  },
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    border: "4px solid #000000",
+  },
+}));
 
 export const DialogCenterContent = styled(DialogContent)<DialogContentProps>(
   ({ theme }) => ({
