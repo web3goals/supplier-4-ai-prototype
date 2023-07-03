@@ -25,6 +25,10 @@ export default function useKwil() {
     return await kwil.selectQuery(dbid, `SELECT * FROM supplies`);
   };
 
+  let selectCountSupplies = async function () {
+    return await kwil.selectQuery(dbid, `SELECT COUNT(*) FROM supplies`);
+  };
+
   let insertSupply = async function (
     id: string,
     tokenContract: string,
@@ -69,5 +73,11 @@ export default function useKwil() {
     return await kwil.broadcast(actionTx);
   };
 
-  return { selectSupply, selectSupplies, insertSupply, deleteSupply };
+  return {
+    selectSupply,
+    selectSupplies,
+    selectCountSupplies,
+    insertSupply,
+    deleteSupply,
+  };
 }

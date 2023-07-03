@@ -1,16 +1,28 @@
 import Layout from "@/components/layout";
+import { CardBox, LargeLoadingButton } from "@/components/styled";
+import SupplyPurchaseDialog from "@/components/supply/SupplyPurchaseDialog";
+import { DialogContext } from "@/context/dialog";
+import useError from "@/hooks/useError";
 import useKwil from "@/hooks/useKwil";
-import { Typography } from "@mui/material";
-import { useEffect } from "react";
+import { Chip, Typography } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 
 /**
  * Page with supplies.
  */
 export default function Supplies() {
-  const { selectSupplies } = useKwil();
+  const { showDialog, closeDialog } = useContext(DialogContext);
+  const { handleError } = useError();
+  const { selectCountSupplies } = useKwil();
+  const [items, setItems] = useState<number | undefined>();
 
+  /**
+   * Load count
+   */
   useEffect(() => {
-    selectSupplies().then((result) => console.log(result));
+    selectCountSupplies()
+      .then(({ data }: any) => setItems(data?.[0]?.["COUNT(*)"]))
+      .catch((error) => handleError(error, true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -22,9 +34,36 @@ export default function Supplies() {
       <Typography textAlign="center" mt={1}>
         that can be used by AI to learning
       </Typography>
-      <Typography textAlign="center" mt={1}>
-        ...
-      </Typography>
+      <CardBox
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        }}
+        mt={2}
+      >
+        <Typography variant="h4" fontWeight={700}>
+          🖼️ Images
+        </Typography>
+        <Typography mt={1}>
+          The data contains JSON with links to images and their descriptions
+        </Typography>
+        {items && <Chip label={`${items} items`} sx={{ mt: 2 }} />}
+        <LargeLoadingButton
+          variant="outlined"
+          onClick={() =>
+            showDialog?.(
+              <SupplyPurchaseDialog
+                onSuccess={() => {}}
+                onClose={closeDialog}
+              />
+            )
+          }
+          sx={{ mt: 2 }}
+        >
+          Purchase
+        </LargeLoadingButton>
+      </CardBox>
     </Layout>
   );
 }

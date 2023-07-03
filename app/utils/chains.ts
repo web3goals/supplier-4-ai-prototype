@@ -74,6 +74,15 @@ export function chainToSupportedChainId(
 }
 
 /**
+ * Return native currency symbol of specified chain if it supported, otherwise return value from default supported chain.
+ */
+export function chainToSupportedChainNativeCurrencySymbol(
+  chain: Chain | undefined
+): string | undefined {
+  return chainToSupportedChainConfig(chain).chain.nativeCurrency.symbol;
+}
+
+/**
  * Return profile contract address of specified chain if it supported, otherwise return value from default supported chain.
  */
 export function chainToSupportedChainProfileContractAddress(
