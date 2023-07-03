@@ -1,4 +1,6 @@
-type ExampleEntity @entity {
+type Claim @entity {
   id: ID!
-  count: BigInt!
+  supplier: String!
+  timestamp: BigInt!
+  value: BigInt!
 }

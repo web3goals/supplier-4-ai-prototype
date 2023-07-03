@@ -8,9 +8,10 @@ dataSources:
     source:
       address: "0xFE00a827aacE2D07DA35e6686bBd2C1C9255A6b9"
       abi: DataSupplier
+      startBlock: 37477337
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Claimed
@@ -20,4 +21,4 @@ dataSources:
       eventHandlers:
         - event: Claimed()
           handler: handleClaimed
-      file: ./src/data-supplier.ts
+      file: ./src/dataSupplierHandler.ts
