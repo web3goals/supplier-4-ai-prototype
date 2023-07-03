@@ -1,0 +1,23 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: DataSupplier
+    network: mumbai
+    source:
+      address: "0xFE00a827aacE2D07DA35e6686bBd2C1C9255A6b9"
+      abi: DataSupplier
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Claimed
+      abis:
+        - name: DataSupplier
+          file: ./abis/DataSupplier.json
+      eventHandlers:
+        - event: Claimed()
+          handler: handleClaimed
+      file: ./src/data-supplier.ts
