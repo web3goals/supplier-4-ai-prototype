@@ -1,13 +1,15 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { Data__factory } from "../typechain-types";
+import { DataSupplier__factory } from "../typechain-types";
 
 describe("DataSupplier", function () {
   async function setupFixture() {
     const [deployer, userOne, userTwo, userThree] = await ethers.getSigners();
 
-    const dataSupplierContract = await new Data__factory(deployer).deploy();
+    const dataSupplierContract = await new DataSupplier__factory(
+      deployer
+    ).deploy();
 
     return {
       dataSupplierContract,

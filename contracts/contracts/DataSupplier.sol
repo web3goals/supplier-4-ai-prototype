@@ -36,7 +36,7 @@ contract DataSupplier {
     function purchaseData() public payable {
         // Send earnings to all suppliers
         for (uint i = 0; i < _suppliers.length; i++) {
-            _earnings[_suppliers[i]] =
+            _earnings[_suppliers[i]] +=
                 (msg.value * _supplySizes[_suppliers[i]]) /
                 getTotalSupplySize();
         }

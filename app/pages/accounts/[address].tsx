@@ -1,3 +1,4 @@
+import AccountEarnings from "@/components/account/AccountEarnings";
 import AccountProfile from "@/components/account/AccountProfile";
 import Layout from "@/components/layout";
 import { FullWidthSkeleton, ThickDivider } from "@/components/styled";
@@ -16,6 +17,7 @@ export default function Account() {
         <>
           <AccountProfile address={address.toString()} />
           <ThickDivider sx={{ my: 8 }} />
+          <AccountEarnings address={address.toString()} />
         </>
       ) : (
         <FullWidthSkeleton />
