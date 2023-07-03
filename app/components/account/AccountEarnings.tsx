@@ -1,13 +1,22 @@
 import { dataSupplierContractAbi } from "@/contracts/abi/dataSupplierContract";
+import useClaimsFinder from "@/hooks/subgraph/useClaimsFinder";
 import useToasts from "@/hooks/useToast";
+import { Claim } from "@/types";
 import { isAddressesEqual } from "@/utils/addresses";
 import {
+  chainToSupportedChainConfig,
   chainToSupportedChainDataSupplierContractAddress,
   chainToSupportedChainId,
   chainToSupportedChainNativeCurrencySymbol,
 } from "@/utils/chains";
-import { stringToAddress } from "@/utils/converters";
-import { Box, SxProps, Typography } from "@mui/material";
+import { addressToShortAddress, stringToAddress } from "@/utils/converters";
+import {
+  Box,
+  Link as MuiLink,
+  Stack,
+  SxProps,
+  Typography,
+} from "@mui/material";
 import { useEffect } from "react";
 import { formatEther, zeroAddress } from "viem";
 import {
@@ -129,13 +138,18 @@ function ClaimEarningsCard(props: { address: string; sx?: SxProps }) {
   );
 }
 
-// TODO: Implement
 function ClaimedEarningsList(props: { address: string; sx?: SxProps }) {
+  const { chain } = useNetwork();
+  const { data: claims } = useClaimsFinder({
+    chain: chain,
+    supplier: props.address,
+  });
+
   return (
     <EntityList
-      entities={[]}
-      renderEntityCard={(earnings, index) => (
-        <ClaimedEarningsCard key={index} />
+      entities={claims}
+      renderEntityCard={(claim, index) => (
+        <ClaimedEarningsCard claim={claim} key={index} />
       )}
       noEntitiesText="😐 no claimed earnings"
       sx={{ ...props.sx }}
@@ -143,7 +157,40 @@ function ClaimedEarningsList(props: { address: string; sx?: SxProps }) {
   );
 }
 
-// TODO: Implement
-function ClaimedEarningsCard(props: { sx?: SxProps }) {
-  return <CardBox sx={{ ...props.sx }}>...</CardBox>;
+function ClaimedEarningsCard(props: { claim: Claim; sx?: SxProps }) {
+  const { chain } = useNetwork();
+
+  return (
+    <CardBox
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        background: "#DDDDDD",
+        ...props.sx,
+      }}
+    >
+      {/* Left side */}
+      <Typography fontWeight={700}>
+        {formatEther(BigInt(props.claim.value))}{" "}
+        {chainToSupportedChainNativeCurrencySymbol(chain)}
+      </Typography>
+      {/* Right side */}
+      <Stack direction="column" alignItems="flex-end">
+        <Typography variant="body2">
+          {new Date(props.claim.timestamp * 1000).toLocaleString()}
+        </Typography>
+        <MuiLink
+          variant="body2"
+          href={`${
+            chainToSupportedChainConfig(chain).chain.blockExplorers?.default.url
+          }/tx/${props.claim.id}`}
+          target="_blank"
+        >
+          🔗 {addressToShortAddress(props.claim.id)}
+        </MuiLink>
+      </Stack>
+    </CardBox>
+  );
 }

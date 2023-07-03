@@ -18,3 +18,10 @@ export type Token = {
   name: string;
   image: string;
 };
+
+export type Claim = {
+  id: string;
+  supplier: string;
+  timestamp: number;
+  value: string;
+};

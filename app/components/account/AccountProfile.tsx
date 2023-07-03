@@ -54,6 +54,7 @@ export default function AccountProfile(props: { address: string }) {
           account={props.address}
           accountProfileUriData={profileUriData}
           variant="h4"
+          textAlign="center"
         />
         {/* About */}
         {profileUriData?.attributes?.[1]?.value && (

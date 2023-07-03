@@ -12,7 +12,7 @@ export default function Account() {
   const { address } = router.query;
 
   return (
-    <Layout maxWidth="md">
+    <Layout maxWidth="sm">
       {address ? (
         <>
           <AccountProfile address={address.toString()} />

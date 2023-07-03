@@ -7,6 +7,7 @@ interface ChainConfig {
     profile: string;
     dataSupplier: string;
   };
+  subgraphApiUrl: string;
 }
 
 /**
@@ -16,7 +17,8 @@ export function getSupportedChainConfigs(): ChainConfig[] {
   const chainConfigs: ChainConfig[] = [];
   if (
     process.env.NEXT_PUBLIC_POLYGON_MUMBAI_PROFILE_CONTRACT_ADDRESS &&
-    process.env.NEXT_PUBLIC_POLYGON_MUMBAI_DATA_SUPPLIER_CONTRACT_ADDRESS
+    process.env.NEXT_PUBLIC_POLYGON_MUMBAI_DATA_SUPPLIER_CONTRACT_ADDRESS &&
+    process.env.NEXT_PUBLIC_MUMBAI_SUBGRAPH_API_URL
   ) {
     chainConfigs.push({
       chain: polygonMumbai,
@@ -26,6 +28,7 @@ export function getSupportedChainConfigs(): ChainConfig[] {
         dataSupplier:
           process.env.NEXT_PUBLIC_POLYGON_MUMBAI_DATA_SUPPLIER_CONTRACT_ADDRESS,
       },
+      subgraphApiUrl: process.env.NEXT_PUBLIC_MUMBAI_SUBGRAPH_API_URL,
     });
   }
   return chainConfigs;
@@ -102,4 +105,13 @@ export function chainToSupportedChainDataSupplierContractAddress(
   return stringToAddress(
     chainToSupportedChainConfig(chain).contractAddresses.dataSupplier
   );
+}
+
+/**
+ * Return subgraph api url of specified chain if it supported, otherwise return value from default supported chain.
+ */
+export function chainToSupportedChainSubgraphApiUrl(
+  chain: Chain | undefined
+): string {
+  return chainToSupportedChainConfig(chain).subgraphApiUrl;
 }
