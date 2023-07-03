@@ -10,7 +10,7 @@ contract DataSupplier {
     mapping(address => mapping(uint => bool)) private _supplies;
     mapping(address => uint) private _earnings;
 
-    event Claimed();
+    event Claimed(uint value);
 
     /// **************************
     /// ***** USER FUNCTIONS *****
@@ -47,7 +47,7 @@ contract DataSupplier {
         _earnings[msg.sender] = 0;
         (bool sent, ) = msg.sender.call{value: earnings}("");
         require(sent, "Failed to send earnings");
-        emit Claimed();
+        emit Claimed(earnings);
     }
 
     /// *********************************

@@ -6,9 +6,9 @@ dataSources:
     name: DataSupplier
     network: mumbai
     source:
-      address: "0xFE00a827aacE2D07DA35e6686bBd2C1C9255A6b9"
+      address: "0xf2ef3D3b068d821F8Fac6D6Af61A3C3506650D4a"
       abi: DataSupplier
-      startBlock: 37477337
+      startBlock: 37511863
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -19,6 +19,6 @@ dataSources:
         - name: DataSupplier
           file: ./abis/DataSupplier.json
       eventHandlers:
-        - event: Claimed()
+        - event: Claimed(uint256)
           handler: handleClaimed
       file: ./src/dataSupplierHandler.ts

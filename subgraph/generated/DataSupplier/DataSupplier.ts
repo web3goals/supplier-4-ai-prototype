@@ -22,6 +22,10 @@ export class Claimed__Params {
   constructor(event: Claimed) {
     this._event = event;
   }
+
+  get value(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
 }
 
 export class DataSupplier extends ethereum.SmartContract {
