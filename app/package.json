@@ -14,6 +14,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.134",
     "@mui/material": "^5.13.6",
+    "@particle-network/rainbowkit-ext": "^0.14.3",
     "@rainbow-me/rainbowkit": "^1.0.4",
     "@types/lodash": "^4.14.195",
     "@types/node": "20.3.2",
