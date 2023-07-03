@@ -186,9 +186,9 @@ function TokenCard(props: { token: Token }) {
         {description && (
           <>
             <Box mt={1}>
-              <Chip label="🖼️ Images" />
+              <Chip size="small" label="🖼️ Images" />
             </Box>
-            <Typography variant="body2" mt={1}>
+            <Typography variant="body2" mt={1} fontStyle="italic">
               {description}
             </Typography>
           </>

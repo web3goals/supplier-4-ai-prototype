@@ -40,7 +40,7 @@ export default function SupplyMakeDialog(props: {
   const { handleError } = useError();
   const { chain } = useNetwork();
   const { showToastSuccess, showToastError } = useToasts();
-  const { insertSupply } = useKwil();
+  const { selectSupply, insertSupply, deleteSupply } = useKwil();
 
   /**
    * Dialog states
@@ -97,15 +97,22 @@ export default function SupplyMakeDialog(props: {
   async function submitForm(values: any) {
     try {
       setIsFormSubmitting(true);
-      // Update data in kwill
+      const id = `${props.token.contract}_${props.token.id}`;
+      // Check supply in kwill
+      const { data: supply } = await selectSupply(id);
+      // Delete supply if already exists in kwill
+      if (supply?.length != 0) {
+        await deleteSupply(id);
+      }
+      // Insert supply to kwill
       await insertSupply(
-        `${props.token.contract}_${props.token.id}`,
+        id,
         props.token.contract,
         props.token.id,
         props.token.image,
         values.description
       );
-      // Update data in contract
+      // Use contract to process supply
       contractWrite?.();
     } catch (error: any) {
       handleError(error, true);
