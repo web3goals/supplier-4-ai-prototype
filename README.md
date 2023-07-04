@@ -20,4 +20,4 @@ https://dataset-supplier-app.vercel.app/
 
 ## 🏗️ Architecture
 
-...
+![Architecture](architecture.png)
