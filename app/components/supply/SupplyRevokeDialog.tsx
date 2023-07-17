@@ -55,14 +55,10 @@ export default function SupplyRevokeDialog(props: {
     },
   });
   const {
-    data: contractWriteData,
     isLoading: isContractWriteLoading,
     write: contractWrite,
+    isSuccess: isContractWriteSuccess,
   } = useContractWrite(contractPrepareConfig);
-  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } =
-    useWaitForTransaction({
-      hash: contractWriteData?.hash,
-    });
 
   /**
    * Close dialog
@@ -92,20 +88,19 @@ export default function SupplyRevokeDialog(props: {
    * Handle transaction success to show success message
    */
   useEffect(() => {
-    if (isTransactionSuccess) {
+    if (isContractWriteSuccess) {
       showToastSuccess("Token is revoked");
       props.onSuccess?.();
       close();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isTransactionSuccess]);
+  }, [isContractWriteSuccess]);
 
   /**
    * Form states
    */
-  const isFormLoading =
-    isContractWriteLoading || isTransactionLoading || isFormSubmitting;
-  const isFormDisabled = isFormLoading || isTransactionSuccess;
+  const isFormLoading = isContractWriteLoading || isFormSubmitting;
+  const isFormDisabled = isFormLoading || isContractWriteSuccess;
   const isFormSubmittingDisabled = isFormDisabled || !contractWrite;
 
   return (

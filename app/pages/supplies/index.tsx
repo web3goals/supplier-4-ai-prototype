@@ -25,7 +25,6 @@ import { useAccount, useContractRead, useNetwork } from "wagmi";
 export default function Supplies() {
   const { address: accountAddress } = useAccount();
   const { handleError } = useError();
-  const [tokenContracts, setTokenContracts] = useState<string[] | undefined>();
   const [tokens, setTokens] = useState<Token[] | undefined>();
 
   /**
@@ -37,44 +36,16 @@ export default function Supplies() {
       : accountAddress;
 
   /**
-   * Load token contracts
-   */
-  useEffect(() => {
-    setTokenContracts(undefined);
-    if (address) {
-      axios
-        .get("/api/getAccountNfts", {
-          params: {
-            address: address,
-            network: "polygon",
-          },
-        })
-        .then(({ data }) => {
-          setTokenContracts(
-            data.data.list
-              .filter((element: any) => element.primaryInterface == "erc_721")
-              .map((element: any) => element.contract)
-          );
-        })
-        .catch((error) => {
-          handleError(error, true);
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
-
-  /**
    * Load tokens
    */
   useEffect(() => {
     setTokens(undefined);
-    if (address && tokenContracts) {
+    if (address) {
       axios
         .get(`https://deep-index.moralis.io/api/v2/${address}/nft`, {
           params: {
             chain: "polygon",
             format: "decimal",
-            token_addresses: tokenContracts,
           },
           headers: {
             "X-API-Key": process.env.NEXT_PUBLIC_MORALIS_API_KEY,
@@ -100,7 +71,7 @@ export default function Supplies() {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address, tokenContracts]);
+  }, [address]);
 
   return (
     <Layout maxWidth="sm">

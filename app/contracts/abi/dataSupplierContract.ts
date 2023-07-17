@@ -27,6 +27,37 @@ export const dataSupplierContractAbi = [
         type: "address",
       },
     ],
+    name: "getClaims",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "value",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct DataSupplier.Claim[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "supplier",
+        type: "address",
+      },
+    ],
     name: "getEarnings",
     outputs: [
       {

@@ -1,4 +1,4 @@
-import { Chain, polygonMumbai } from "wagmi/chains";
+import { Chain } from "wagmi/chains";
 import { stringToAddress } from "./converters";
 
 interface ChainConfig {
@@ -7,8 +7,39 @@ interface ChainConfig {
     profile: string;
     dataSupplier: string;
   };
-  subgraphApiUrl: string;
 }
+
+const mantleTestnet: Chain = {
+  id: 5001,
+  name: "Mantle Testnet",
+  network: "mantle-testnet",
+  nativeCurrency: {
+    name: "MNT",
+    symbol: "MNT",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.testnet.mantle.xyz"],
+      webSocket: ["wss://ws.testnet.mantle.xyz"],
+    },
+    public: {
+      http: ["https://rpc.testnet.mantle.xyz"],
+      webSocket: ["wss://ws.testnet.mantle.xyz"],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: "Mantle Network Explorer",
+      url: "https://explorer.testnet.mantle.xyz",
+    },
+    default: {
+      name: "Mantle Network Explorer",
+      url: "https://explorer.testnet.mantle.xyz",
+    },
+  },
+  testnet: true,
+};
 
 /**
  * Get chain configs defined by environment variables.
@@ -16,19 +47,17 @@ interface ChainConfig {
 export function getSupportedChainConfigs(): ChainConfig[] {
   const chainConfigs: ChainConfig[] = [];
   if (
-    process.env.NEXT_PUBLIC_POLYGON_MUMBAI_PROFILE_CONTRACT_ADDRESS &&
-    process.env.NEXT_PUBLIC_POLYGON_MUMBAI_DATA_SUPPLIER_CONTRACT_ADDRESS &&
-    process.env.NEXT_PUBLIC_MUMBAI_SUBGRAPH_API_URL
+    process.env.NEXT_PUBLIC_MANTLE_TESTNET_PROFILE_CONTRACT_ADDRESS &&
+    process.env.NEXT_PUBLIC_MANTLE_TESTNET_DATA_SUPPLIER_CONTRACT_ADDRESS
   ) {
     chainConfigs.push({
-      chain: polygonMumbai,
+      chain: mantleTestnet,
       contractAddresses: {
         profile:
-          process.env.NEXT_PUBLIC_POLYGON_MUMBAI_PROFILE_CONTRACT_ADDRESS,
+          process.env.NEXT_PUBLIC_MANTLE_TESTNET_PROFILE_CONTRACT_ADDRESS,
         dataSupplier:
-          process.env.NEXT_PUBLIC_POLYGON_MUMBAI_DATA_SUPPLIER_CONTRACT_ADDRESS,
+          process.env.NEXT_PUBLIC_MANTLE_TESTNET_DATA_SUPPLIER_CONTRACT_ADDRESS,
       },
-      subgraphApiUrl: process.env.NEXT_PUBLIC_MUMBAI_SUBGRAPH_API_URL,
     });
   }
   return chainConfigs;
@@ -105,13 +134,4 @@ export function chainToSupportedChainDataSupplierContractAddress(
   return stringToAddress(
     chainToSupportedChainConfig(chain).contractAddresses.dataSupplier
   );
-}
-
-/**
- * Return subgraph api url of specified chain if it supported, otherwise return value from default supported chain.
- */
-export function chainToSupportedChainSubgraphApiUrl(
-  chain: Chain | undefined
-): string {
-  return chainToSupportedChainConfig(chain).subgraphApiUrl;
 }

@@ -1,22 +1,14 @@
 import { dataSupplierContractAbi } from "@/contracts/abi/dataSupplierContract";
-import useClaimsFinder from "@/hooks/subgraph/useClaimsFinder";
 import useToasts from "@/hooks/useToast";
 import { Claim } from "@/types";
 import { isAddressesEqual } from "@/utils/addresses";
 import {
-  chainToSupportedChainConfig,
   chainToSupportedChainDataSupplierContractAddress,
   chainToSupportedChainId,
   chainToSupportedChainNativeCurrencySymbol,
 } from "@/utils/chains";
-import { addressToShortAddress, stringToAddress } from "@/utils/converters";
-import {
-  Box,
-  Link as MuiLink,
-  Stack,
-  SxProps,
-  Typography,
-} from "@mui/material";
+import { stringToAddress } from "@/utils/converters";
+import { Box, Stack, SxProps, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { formatEther, zeroAddress } from "viem";
 import {
@@ -25,7 +17,6 @@ import {
   useContractWrite,
   useNetwork,
   usePrepareContractWrite,
-  useWaitForTransaction,
 } from "wagmi";
 import EntityList from "../entity/EntityList";
 import { CardBox, LargeLoadingButton } from "../styled";
@@ -79,31 +70,27 @@ function ClaimEarningsCard(props: { address: string; sx?: SxProps }) {
     },
   });
   const {
-    data: contractWriteData,
     isLoading: isContractWriteLoading,
     write: contractWrite,
+    isSuccess: isContractWriteSuccess,
   } = useContractWrite(contractPrepareConfig);
-  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } =
-    useWaitForTransaction({
-      hash: contractWriteData?.hash,
-    });
 
   /**
    * Handle transaction success to show success message
    */
   useEffect(() => {
-    if (isTransactionSuccess) {
+    if (isContractWriteSuccess) {
       showToastSuccess("Earnings are claimed");
       refetchEarnings();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isTransactionSuccess]);
+  }, [isContractWriteSuccess]);
 
   /**
    * Form states
    */
-  const isFormLoading = isContractWriteLoading || isTransactionLoading;
-  const isFormDisabled = isFormLoading || isTransactionSuccess;
+  const isFormLoading = isContractWriteLoading;
+  const isFormDisabled = isFormLoading || isContractWriteSuccess;
   const isFormSubmittingDisabled =
     isFormDisabled || !contractWrite || earnings === BigInt(0);
 
@@ -140,14 +127,20 @@ function ClaimEarningsCard(props: { address: string; sx?: SxProps }) {
 
 function ClaimedEarningsList(props: { address: string; sx?: SxProps }) {
   const { chain } = useNetwork();
-  const { data: claims } = useClaimsFinder({
-    chain: chain,
-    supplier: props.address,
+
+  /**
+   * Define claims
+   */
+  const { data: claims } = useContractRead({
+    address: chainToSupportedChainDataSupplierContractAddress(chain),
+    abi: dataSupplierContractAbi,
+    functionName: "getClaims",
+    args: [stringToAddress(props.address) || zeroAddress],
   });
 
   return (
     <EntityList
-      entities={claims}
+      entities={claims as any[]}
       renderEntityCard={(claim, index) => (
         <ClaimedEarningsCard claim={claim} key={index} />
       )}
@@ -179,17 +172,8 @@ function ClaimedEarningsCard(props: { claim: Claim; sx?: SxProps }) {
       {/* Right side */}
       <Stack direction="column" alignItems="flex-end">
         <Typography variant="body2">
-          {new Date(props.claim.timestamp * 1000).toLocaleString()}
+          {new Date(Number(props.claim.timestamp) * 1000).toLocaleString()}
         </Typography>
-        <MuiLink
-          variant="body2"
-          href={`${
-            chainToSupportedChainConfig(chain).chain.blockExplorers?.default.url
-          }/tx/${props.claim.id}`}
-          target="_blank"
-        >
-          🔗 {addressToShortAddress(props.claim.id)}
-        </MuiLink>
       </Stack>
     </CardBox>
   );

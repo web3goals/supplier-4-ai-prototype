@@ -32,7 +32,6 @@ import {
   useContractWrite,
   useNetwork,
   usePrepareContractWrite,
-  useWaitForTransaction,
 } from "wagmi";
 import * as yup from "yup";
 
@@ -102,20 +101,13 @@ export default function AccountEditProfileForm(props: {
     chainId: chainToSupportedChainId(chain),
   });
   const {
-    data: contractWriteData,
     isLoading: isContractWriteLoading,
     write: contractWrite,
+    isSuccess: isContractWriteSuccess,
   } = useContractWrite(contractConfig);
-  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } =
-    useWaitForTransaction({
-      hash: contractWriteData?.hash,
-    });
 
   const isFormDisabled =
-    isFormSubmitting ||
-    isContractWriteLoading ||
-    isTransactionLoading ||
-    isTransactionSuccess;
+    isFormSubmitting || isContractWriteLoading || isContractWriteSuccess;
 
   async function onImageChange(files: any[]) {
     try {
@@ -193,12 +185,12 @@ export default function AccountEditProfileForm(props: {
   }, [updatedProfileDataUri, contractWrite, isContractWriteLoading]);
 
   useEffect(() => {
-    if (isTransactionSuccess) {
+    if (isContractWriteSuccess) {
       showToastSuccess("Changes saved, account will be updated soon");
       router.push(`/accounts/${address}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isTransactionSuccess]);
+  }, [isContractWriteSuccess]);
 
   return (
     <Formik
@@ -378,9 +370,7 @@ export default function AccountEditProfileForm(props: {
           </FormControl>
           {/* Submit button */}
           <ExtraLargeLoadingButton
-            loading={
-              isFormSubmitting || isContractWriteLoading || isTransactionLoading
-            }
+            loading={isFormSubmitting || isContractWriteLoading}
             variant="contained"
             type="submit"
             disabled={isFormDisabled || !contractWrite}

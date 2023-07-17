@@ -11,12 +11,7 @@ import {
 import { Dialog, MenuItem, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import {
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-} from "wagmi";
+import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
 import * as yup from "yup";
 import FormikHelper from "../helper/FormikHelper";
 import {
@@ -74,14 +69,10 @@ export default function SupplyMakeDialog(props: {
     },
   });
   const {
-    data: contractWriteData,
     isLoading: isContractWriteLoading,
     write: contractWrite,
+    isSuccess: isContractWriteSuccess,
   } = useContractWrite(contractPrepareConfig);
-  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } =
-    useWaitForTransaction({
-      hash: contractWriteData?.hash,
-    });
 
   /**
    * Close dialog
@@ -124,20 +115,19 @@ export default function SupplyMakeDialog(props: {
    * Handle transaction success to show success message
    */
   useEffect(() => {
-    if (isTransactionSuccess) {
+    if (isContractWriteSuccess) {
       showToastSuccess("Token is supplied");
       props.onSuccess?.();
       close();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isTransactionSuccess]);
+  }, [isContractWriteSuccess]);
 
   /**
    * Form states
    */
-  const isFormLoading =
-    isContractWriteLoading || isTransactionLoading || isFormSubmitting;
-  const isFormDisabled = isFormLoading || isTransactionSuccess;
+  const isFormLoading = isContractWriteLoading || isFormSubmitting;
+  const isFormDisabled = isFormLoading || isContractWriteSuccess;
   const isFormSubmittingDisabled = isFormDisabled || !contractWrite;
 
   return (
