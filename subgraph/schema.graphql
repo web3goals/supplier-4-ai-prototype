@@ -1,6 +1,0 @@
-type Claim @entity {
-  id: ID!
-  supplier: String!
-  timestamp: BigInt!
-  value: BigInt!
-}
