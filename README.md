@@ -4,7 +4,7 @@ Earn crypto by supplying your own data to AI for learning.
 
 ## 🔗 Application
 
-...
+https://supplier-4-ai-app.vercel.app/
 
 ## 🔥 The problem it solves
 
