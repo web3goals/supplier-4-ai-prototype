@@ -39,10 +39,10 @@ export default function Landing() {
           />
         </Box>
         <Typography variant="h1" textAlign="center" mt={2}>
-          ⚡ <strong>Earn</strong> from your own data{" "}
+          ⚡ <strong>Earn</strong> crypto <strong>by supplying</strong>
         </Typography>
         <Typography variant="h4" textAlign="center" mt={1}>
-          <strong>by&nbsp;supplying</strong> it to AI for learning
+          your own data <strong>to AI</strong> for learning
         </Typography>
         {address ? (
           <Link href={`/accounts/${address}`}>

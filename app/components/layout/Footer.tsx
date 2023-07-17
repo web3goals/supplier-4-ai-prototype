@@ -36,7 +36,7 @@ function Copyright(props: { sx?: SxProps }) {
         textAlign="center"
         mt={0.5}
       >
-        ⚡ Earn from your own data by supplying it to AI for learning
+        ⚡ Earn crypto by supplying your own data to AI for learning
       </Typography>
     </Container>
   );
