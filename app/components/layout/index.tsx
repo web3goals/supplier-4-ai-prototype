@@ -19,7 +19,7 @@ export default function Layout(props: {
     <Box>
       <CssBaseline />
       <Head>
-        <title>Dataset Supplier</title>
+        <title>Supplier 4 AI</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Navigation />

@@ -16,7 +16,7 @@ contract Profile is ERC721URIStorage, Ownable {
     Counters.Counter private _counter;
     mapping(address => uint256) private _owners;
 
-    constructor() ERC721("Dataset Supplier - Profiles", "DSP") {}
+    constructor() ERC721("Supplier 4 AI - Profiles", "SP") {}
 
     /// **************************
     /// ***** USER FUNCTIONS *****

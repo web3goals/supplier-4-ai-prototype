@@ -52,7 +52,7 @@ function Logo(props: { sx?: SxProps }) {
           fontWeight={700}
           display={{ xs: "none", md: "flex" }}
         >
-          🤝 Dataset Supplier
+          🤝 Supplier 4 AI
         </MuiLink>
       </Link>
       <Link href="/" passHref legacyBehavior>

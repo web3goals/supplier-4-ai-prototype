@@ -28,7 +28,7 @@ function Copyright(props: { sx?: SxProps }) {
         fontWeight={700}
         textAlign="center"
       >
-        Dataset Supplier © 2023
+        Supplier 4 AI © 2023
       </Typography>
       <Typography
         color="primary.contrastText"

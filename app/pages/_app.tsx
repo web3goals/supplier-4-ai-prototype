@@ -55,7 +55,7 @@ const connectors = connectorsForWallets([
         chains,
         projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
       }),
-      coinbaseWallet({ appName: "Dataset Supplier", chains }),
+      coinbaseWallet({ appName: "Supplier 4 AI", chains }),
       metaMaskWallet({
         chains,
         projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
