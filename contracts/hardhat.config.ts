@@ -15,18 +15,9 @@ if (process.env.PRIVATE_KEY_2) {
 const config: HardhatUserConfig = {
   solidity: "0.8.18",
   networks: {
-    polygonMumbai: {
-      url: process.env.RPC_URL_POLYGON_MUMBAI || "",
+    mantleTestnet: {
+      url: process.env.RPC_URL_MANTLE_TESTNET || "",
       accounts: accounts,
-    },
-    lineaTestnet: {
-      url: process.env.RPC_URL_LINEA_TESTNET || "",
-      accounts: accounts,
-    },
-  },
-  etherscan: {
-    apiKey: {
-      polygonMumbai: process.env.ETHERSCAN_API_KEY_POLYGON_MUMBAI || "",
     },
   },
 };

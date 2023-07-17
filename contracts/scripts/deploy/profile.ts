@@ -9,7 +9,10 @@ async function main() {
   const deployer = accounts[0];
 
   // Deploy contract
-  const contract = await new Profile__factory(deployer).deploy();
+  const contract = await new Profile__factory(deployer).deploy({
+    gasLimit: 5000000,
+    gasPrice: 1,
+  });
   await contract.waitForDeployment();
   console.log(`✅ Contract deployed to ${contract.target}`);
 }
