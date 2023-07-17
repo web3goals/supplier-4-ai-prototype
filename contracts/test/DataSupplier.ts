@@ -60,6 +60,10 @@ describe("DataSupplier", function () {
     await expect(
       dataSupplierContract.connect(userTwo).claimEarnings()
     ).to.changeEtherBalances([userTwo], [ethers.parseEther("0.01")]);
+
+    // Check claims
+    expect((await dataSupplierContract.getClaims(userOne)).length).to.equal(1);
+    expect((await dataSupplierContract.getClaims(userTwo)).length).to.equal(1);
   });
 
   it("Users must successfully save supply and revoke it", async function () {

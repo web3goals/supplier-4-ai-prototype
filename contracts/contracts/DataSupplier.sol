@@ -5,10 +5,16 @@ pragma solidity ^0.8.9;
  * @notice A contract that stores data supplies
  */
 contract DataSupplier {
+    struct Claim {
+        uint timestamp;
+        uint value;
+    }
+
     address[] private _suppliers;
     mapping(address => uint) private _supplySizes;
     mapping(address => mapping(uint => bool)) private _supplies;
     mapping(address => uint) private _earnings;
+    mapping(address => Claim[]) private _claims;
 
     event Claimed(uint value);
 
@@ -47,6 +53,7 @@ contract DataSupplier {
         _earnings[msg.sender] = 0;
         (bool sent, ) = msg.sender.call{value: earnings}("");
         require(sent, "Failed to send earnings");
+        _claims[msg.sender].push(Claim(block.timestamp, earnings));
         emit Claimed(earnings);
     }
 
@@ -80,5 +87,9 @@ contract DataSupplier {
 
     function getEarnings(address supplier) public view returns (uint) {
         return _earnings[supplier];
+    }
+
+    function getClaims(address supplier) public view returns (Claim[] memory) {
+        return _claims[supplier];
     }
 }
