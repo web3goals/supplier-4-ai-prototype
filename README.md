@@ -24,4 +24,4 @@ https://supplier-4-ai-app.vercel.app/
 
 ## 🏗️ Architecture
 
-...
+![Architecture](/architecture.png)
