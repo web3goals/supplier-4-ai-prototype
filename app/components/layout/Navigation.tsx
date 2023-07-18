@@ -62,7 +62,7 @@ function Logo(props: { sx?: SxProps }) {
           fontWeight={700}
           display={{ xs: "flex", md: "none" }}
         >
-          🤝 DS
+          🤝 S4AI
         </MuiLink>
       </Link>
     </Box>
