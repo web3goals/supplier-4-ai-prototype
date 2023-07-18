@@ -37,6 +37,7 @@
     "viem": "^1.2.6",
     "wagmi": "^1.3.3",
     "web3.storage": "^4.5.4",
-    "yup": "^1.2.0"
+    "yup": "^1.2.0",
+    "zkme-antibot-component": "^1.0.5"
   }
 }
